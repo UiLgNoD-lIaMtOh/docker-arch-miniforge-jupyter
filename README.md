@@ -10,7 +10,7 @@
   </picture>
 </a>
 
-## ghrc.io
+## ghcr.io
 镜像仓库链接：[https://github.com/UiLgNoD-lIaMtOh/docker-arch-miniforge-jupyter/pkgs/container/alpine-miniforge-jupyter](https://github.com/UiLgNoD-lIaMtOh/docker-arch-miniforge-jupyter/pkgs/container/alpine-miniforge-jupyter)  
 
 ## 描述
@@ -59,9 +59,9 @@
     
     # 无缓存构建
     ## arm64
-    docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghrc.io/uilgnod-liamtoh/docker-arch-miniforge-jupyter:latest . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)  
+    docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/docker-arch-miniforge-jupyter:latest . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)  
     ## amd64
-    docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghrc.io/uilgnod-liamtoh/docker-arch-miniforge-jupyter:latest . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)  
+    docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/docker-arch-miniforge-jupyter:latest . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)  
     # 或者这么构建也可以二选一
     ## arm64
     docker-compose -f docker-compose-arm64.yml build --no-cache ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
@@ -130,10 +130,10 @@
     UiLgNoD-lIaMtOh
 
       # 第一部分借用 ubuntu 构建编译 glibc 的镜像
-      docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghrc.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
+      docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
       
       # 执行 glibc 编译并打包
-      docker run --platform "linux/arm64/v8" --rm -e "GLIBC_VERSION=2.40" -e "STDOUT=1" ghrc.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40 > glibc-bin-2.40-0-aarch64.tar.gz
+      docker run --platform "linux/arm64/v8" --rm -e "GLIBC_VERSION=2.40" -e "STDOUT=1" ghcr.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40 > glibc-bin-2.40-0-aarch64.tar.gz
       
       # 赋予编译包权限
       chmod -v +x glibc-bin-2.40-0-aarch64.tar.gz
@@ -238,9 +238,9 @@
     UiLgNoD-lIaMtOh
 
       # 构建 alpine 编译 glibc 镜像
-      docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghrc.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
+      docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
       # 编译支持 alpine 的 glibc 库
-      docker run --rm --name "alpine-test" --platform "linux/arm64/v8" -e "USERS=UiLgNoD-lIaMtOh" -e "PASSWORD=123456" -v "./alpine-pkg-glibc:/alpine-pkg-glibc" ghrc.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40
+      docker run --rm --name "alpine-test" --platform "linux/arm64/v8" -e "USERS=UiLgNoD-lIaMtOh" -e "PASSWORD=123456" -v "./alpine-pkg-glibc:/alpine-pkg-glibc" ghcr.io/uilgnod-liamtoh/glibc-builder:arm64v8-2.40
       # 复制编译好的包到 package 等待下一步指示
       cp -rfv alpine-pkg-glibc/packages/aarch64 ../package/
 
@@ -283,9 +283,9 @@
     UiLgNoD-lIaMtOh
 
       # 构建镜像
-      docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghrc.io/uilgnod-liamtoh/glibc-builder:amd64-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
+      docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/glibc-builder:amd64-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
       # 执行 glibc 编译并打包
-      docker run --platform "linux/amd64" --rm -e "GLIBC_VERSION=2.40" -e "STDOUT=1" ghrc.io/uilgnod-liamtoh/glibc-builder:amd64-2.40 > glibc-bin-2.40-0-x86_64.tar.gz
+      docker run --platform "linux/amd64" --rm -e "GLIBC_VERSION=2.40" -e "STDOUT=1" ghcr.io/uilgnod-liamtoh/glibc-builder:amd64-2.40 > glibc-bin-2.40-0-x86_64.tar.gz
       # 赋予编译包权限
       chmod -v +x glibc-bin-2.40-0-x86_64.tar.gz
       # clone sgerrand/alpine-pkg-glibc 为 alpine 编译可支持的 glibc 库
@@ -380,9 +380,9 @@
     UiLgNoD-lIaMtOh
       
       # 构建 alpine 编译 glibc 镜像
-      docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghrc.io/uilgnod-liamtoh/glibc-builder:amd64-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
+      docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/glibc-builder:amd64-2.40 . ; docker builder prune -fa ; docker rmi $(docker images -qaf dangling=true)
       # 编译支持 alpine 的 glibc 库
-      docker run --rm --name "alpine-test" --platform "linux/amd64" -e "USERS=UiLgNoD-lIaMtOh" -e "PASSWORD=123456" -v "./alpine-pkg-glibc:/alpine-pkg-glibc" ghrc.io/uilgnod-liamtoh/glibc-builder:amd64-2.40
+      docker run --rm --name "alpine-test" --platform "linux/amd64" -e "USERS=UiLgNoD-lIaMtOh" -e "PASSWORD=123456" -v "./alpine-pkg-glibc:/alpine-pkg-glibc" ghcr.io/uilgnod-liamtoh/glibc-builder:amd64-2.40
       # 复制编译好的包到 package 等待下一步指示
       cp -rfv alpine-pkg-glibc/packages/x86_64 ../package/
 
@@ -404,7 +404,7 @@
     # 将在线克隆的方式注释了，太卡了，卡哭我了，哭了一晚上 >_< 呜呜呜
     # actions 自动切换 aarch64 或 x86_64 编译
     # 已经将树莓派4B卖了，性能还是不够用
-    # 可是项目不管也不行，索性用 github 自带 action 构建镜像提交到 ghrc.io 仓库即时更新镜像
+    # 可是项目不管也不行，索性用 github 自带 action 构建镜像提交到 ghcr.io 仓库即时更新镜像
 
 # 缺陷
     1. 本项目 glibc 编译完全依赖三个 github 核心项目 
