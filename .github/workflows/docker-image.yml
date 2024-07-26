@@ -6,14 +6,15 @@ on:
   # Runs every 5 minutes.
   # Runs at 00:00 UTC every day.
   # Actions schedules run at most every 5 minutes.
-  # schedule:
+  schedule:
     # - cron: '*/5 * * * *'
-    # - cron: '55 */8 * * *'
+    - cron: '55 */8 * * *'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 # 自定义环境变量，有风险危险调用，有什么私密变量请不要定义在这里
 env:
   REGISTRY: ghcr.io
+  IMAGE: ${{ github.actor }}/alpine-miniforge-jupyter
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,53 +42,62 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - # 安装 git
-      name: install git
-      run: |
-          sudo apt-get -qy install git
+        
+    - # 缓存 Docker 镜像以加速构建
+      name: Cache Docker layers
+      uses: actions/cache@v4
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-     
+  
+    - # 根据输入自动生成 tag 和 label 等数据
+      name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
+        tags: |
+          # set latest tag for master branch
+          type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+          
     - # 开关脚本用于执行编译架构 amd64 构建镜像
       name: arch switch amd64
       run: |
         sudo rm -rfv docker-glibc-builder
         export ARCH_SWITCH=x86_64 ; chmod -v +x arch_switch.sh ; bash arch_switch.sh
-        
-    - # 构建 amd64 镜像
-      name: build amd64
-      run: |
-        #docker build --no-cache --platform "linux/amd64" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:amd64 .
-        docker buildx build --platform "linux/amd64" -t ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:latest --push -f Dockerfile .
-    
-    # - # 推送 amd64 镜像到仓库
-    #   name: push amd64
-    #   run: |
-    #     docker push ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:amd64
-        
+
     - # 开关脚本用于执行编译架构 arm64 构建镜像
       name: arch switch arm64
       run: |
         sudo rm -rfv docker-glibc-builder
         export ARCH_SWITCH=aarch64 ; chmod -v +x arch_switch.sh ; bash arch_switch.sh
-        
-    - # 构建 arm64 镜像
-      name: build arm64
+
+    - # 构建并上传镜像到仓库
+      name: Build and push
+      uses: docker/build-push-action@v6
+      id: alpine-miniforge-jupyter
+      with:
+        provenance: false
+        context: .
+        file: ./Dockerfile
+        builder: ${{ steps.buildx.outputs.name }}
+        platforms: linux/amd64,linux/arm64/v8
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+    - # Temp fix 修复 docker 缓存越来越大的问题
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      name: Move cache
       run: |
-        # docker build --no-cache --platform "linux/arm64/v8" -f Dockerfile -t ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:arm64 .
-        docker buildx build --platform "linux/arm64/v8" -t ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:latest --push -f Dockerfile .
-    
-    # - # 推送 arm64 镜像到仓库
-    #   name: push arm64
-    #   run: |
-    #     docker push ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:arm64
-        
-    
-    # - # 上传镜像到仓库
-    #   name: push
-    #   run: |
-    #     docker manifest create ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:latest ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:amd64 ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:arm64
-    #     docker manifest push ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:latest
-    
-    # 打印镜像信息
-    - name: Inspect image
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache 
+    - # 打印镜像信息
+      name: Inspect image
       run: |
         docker buildx imagetools inspect \
-        ghcr.io/uilgnod-liamtoh/alpine-miniforge-jupyter:latest
+        ${{ env.REGISTRY }}/$(echo ${{ env.IMAGE }} | tr A-Z a-z):${{ steps.meta.outputs.version }}
