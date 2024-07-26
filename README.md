@@ -18,7 +18,7 @@
 ![image](https://github.com/user-attachments/assets/8f56f08d-ceee-49dd-98c9-7ba011cb54c5)
 ![image](https://github.com/user-attachments/assets/f42a92e9-f2e6-4424-8196-9802ace4ac5e)
 ![image](https://github.com/user-attachments/assets/e09dde46-c141-4782-a3c0-ead3939c4df2)
-![image](https://github.com/user-attachments/assets/21d2a910-a436-4ae2-972b-6fd05364f29d)
+![image](https://github.com/user-attachments/assets/21d2a910-a436-4ae2-972b-6fd05364f29d)  
 
 2.赋予 actions[bot] 读/写仓库权限，在仓库中点击 Settings -> Actions -> General -> Workflow Permissions -> Read and write permissions -> save，如图所示
 ![image](https://github.com/user-attachments/assets/2faa1a40-9891-4914-ace7-d5d23434b4bb)
@@ -26,8 +26,8 @@
 3.转到 Actions  
 
     -> Clean Git Large Files 并且启动 workflow，实现自动化清理 .git 目录大文件记录  
-    -> Docker Image CI 并且启动 workflow，实现自动化构建镜像并推送云端  
-    -> Remove Old Workflow Runs 并且启动 workflow，实现自动化清理 workflow 并保留最后三个  
+    -> Docker Image Build and Deploy Images to GHCR CI 并且启动 workflow，实现自动化构建镜像并推送云端  
+    -> Remove Old Workflow Runs 并且启动 workflow，实现自动化清理 workflow 并保留最后三个    
     
 4.这是包含了 miniforge 和 jupyter 的 docker 构建材料  
 5.主要目的是为了使用 jupyter 本来没想这么复杂，我就是觉得 miniforge 好，为了自己的追求，只能辛苦一下  
