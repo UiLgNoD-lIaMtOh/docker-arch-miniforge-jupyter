@@ -4,7 +4,7 @@
 # sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 
 # 安装一些必备工具
-apk add --no-cache tzdata
+apk add --no-cache tzdata bash shadow font-noto-cjk font-wqy-zenhei curl wget grep gcompat
 
 # 修改时钟
 date +'%Y-%m-%d %H:%M:%S'
@@ -12,8 +12,6 @@ ln -sfv /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 date +'%Y-%m-%d %H:%M:%S'
 
 # 换成 bash
-apk add --no-cache bash shadow curl wget grep gcompat
-
 chsh -s /bin/bash
 
 # 安装 glibc alpine 编译包
