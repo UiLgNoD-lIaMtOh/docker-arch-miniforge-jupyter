@@ -15,13 +15,13 @@
 
 ## 描述
 1.为了实现 actions workflow 自动化 docker 构建运行，需要添加 `GITHUB_TOKEN` 环境变量，这个是访问 GitHub API 的令牌，可以在 GitHub 主页，点击个人头像，Settings -> Developer settings -> Personal access tokens -> Tokens (classic) -> Generate new token -> Generate new token (classic) ，设置名字为 GITHUB_TOKEN 接着要配置 环境变量有效时间，勾选环境变量作用域 repo write:packages workflow 和 admin:repo_hook 即可，最后点击Generate token，如图所示
-![image](https://github.com/user-attachments/assets/8f56f08d-ceee-49dd-98c9-7ba011cb54c5)
-![image](https://github.com/user-attachments/assets/f42a92e9-f2e6-4424-8196-9802ace4ac5e)
-![image](https://github.com/user-attachments/assets/e09dde46-c141-4782-a3c0-ead3939c4df2)
-![image](https://github.com/user-attachments/assets/21d2a910-a436-4ae2-972b-6fd05364f29d)  
+![image](assets/00.jpeg)
+![image](assets/01.jpeg)
+![image](assets/02.jpeg)
+![image](assets/03.jpeg)  
 
 2.赋予 actions[bot] 读/写仓库权限，在仓库中点击 Settings -> Actions -> General -> Workflow Permissions -> Read and write permissions -> save，如图所示
-![image](https://github.com/user-attachments/assets/2faa1a40-9891-4914-ace7-d5d23434b4bb)
+![image](assets/04.jpeg)
 
 3.转到 Actions  
 
@@ -86,8 +86,8 @@
     # 首先访问 http://[主机IP]:8888 输入默认密码 123456
     # 然后如图打开终端 在终端内执行密码修改指令 需输入两次 密码不会显示属于正常现象 密码配置文件会保存到容器内的 $HOME/.jupyter/jupyter_server_config.json 
     jupyter-lab password
-  ![4](https://github.com/user-attachments/assets/b9d0143b-557d-454d-ba32-d54323313905)
-  ![5](https://github.com/user-attachments/assets/0ba38a9c-2c4d-493a-9b02-3ee17e1fc474)
+  ![image](assets/05.jpeg)
+  ![image](assets/06.jpeg)
 
 # 核心依赖，关于支持 arch_switch.sh alpine glibc 编译包
 ## 编译 alpine arm64v8 的 glibc 包流程
